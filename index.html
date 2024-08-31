@@ -15,7 +15,8 @@
                     <img class="header-logo-icon" src="icons/logo/to-do.png" alt="logo">
                 </div>
                 <div class="header__sorting">
-                    <img class="sorting-btn" src="icons/sorting/sort.png" alt="settings">
+                    <img class="sorting-btn sorting-btn-up" src="icons/sorting/sort-ascending.png" alt="settings">
+                    <img class="sorting-btn sorting-btn-down" src="icons/sorting/sort-descending.png" alt="settings">
                 </div>
                 <div class="header__cerate-sorting">
                     <button class="create-task" id="createTask">Создать задачу</button>
@@ -39,7 +40,6 @@
        
     </header>
     <div class="main">
-        
         <!-- list of tasks -->
          <div class="wrapper">
             <div class="block-task-counter">
@@ -60,12 +60,13 @@
                 </div>  
             </div>
             
-            <ul class="list-group" id="tasksList">
-                <!-- <li id="emptyList" class="empty-list">
+            <div class="empty-list">
                     <img src="icons/empty/sticky-note.png" alt="empty">
                     <h1 class="empty-list-title">У вас нет ни одной задачи. Может создадим?</h1>
                     <button class="create-task create-task-main" data-action ='create' id="createTask">Создать задачу</button>
-                </li> -->
+            </div>
+
+            <ul class="list-group" id="tasksList">
                 <!-- <li class="list-group-item">
                     <div class="list-group-item__bage"></div>
                     <div class="note">
@@ -155,7 +156,9 @@
                 <img src="icons/done-block/accept.png" alt="done-icon">
             </div>
             
-            <ul class="list-group-done" id="tasksListDone"></ul>
+            <ul class="list-group-done" id="tasksListDone">
+
+            </ul>
         </div>
     </div>
 

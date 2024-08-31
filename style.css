@@ -78,7 +78,7 @@ select {
 }
 
 body{
-    background: linear-gradient(150deg, #06d7fc88 0%, #b402ebe6 90%);
+    background: linear-gradient(150deg, #b6bbbb88 0%, #bcc8bce6 90%);
 }
 
 .none{
@@ -116,11 +116,16 @@ header{
     font-size: 28px;
 }
 
+.header__sorting{
+    display: flex;
+}
 .header__sorting img{
     width: 50px;
     cursor: pointer;
 }
-
+.sorting-btn-up{
+    margin-right: 10px;
+}
 .header__cerate-sorting{
     display: flex;
     align-items: center;
@@ -213,7 +218,7 @@ body{
     transition: background-color .4s, color .4s;
 }
 body.night-theme{
-    background: linear-gradient(160deg, #06162cd1 0%, #630268cc 90%);
+    background: linear-gradient(160deg, #0a0a0ad1 0%, #423c42cc 90%);
     color: #fff;
 }
 body.night-theme .night-theme-btn{
@@ -329,7 +334,9 @@ body.night-theme .header-logo-icon{
     font-size: 18px;
 }
 
-
+.empty-list.none{
+    display: none !important;
+}
 .empty-list{
     margin: auto 0;
     display: flex;
@@ -339,8 +346,11 @@ body.night-theme .header-logo-icon{
     width: 140px;
     margin: 0 auto;
     margin-bottom: 50px;
+    transition: 0.3s;
 }
-
+.empty-list img:hover{
+    transform: rotate(15deg);
+}
 .empty-list-title{
     text-align: center;
     font-family: "Poppins", sans-serif;
@@ -536,16 +546,16 @@ form{
     margin-bottom: 15px;
 }
 .form-input.error{
-    box-shadow: 0 0 18px red;
-    border: 2px solid red;
+    box-shadow: 0 0 20px red;
+    border: 1px solid red;
 }
 .form-textarea.error{
-    box-shadow: 0 0 18px red;
-    border: 2px solid red;
+    box-shadow: 0 0 20px red;
+    border: 1px solid red;
 }
 .modal__form-radio.error{
-    box-shadow: 0 0 18px red;
-    border: 2px solid red;
+    box-shadow: 0 0 20px red;
+    border: 1px solid red;
 }
 .formtextarea-title{
     color: #272727;
@@ -563,6 +573,7 @@ form{
     border: 1px solid;
     margin-bottom: 15px;
     resize: none;
+  
 }
 .form-color-title{
     color: #272727;
