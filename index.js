@@ -4,6 +4,7 @@ const emptyList = document.querySelector('.empty-list')
 const btnCancelModal = document.querySelector('.modal__button-cancel')
 const btnCloseModal = document.querySelector('.modal__window-close')
 const form = document.querySelector('#form')
+const btnAddTask = document.querySelector('.modal__button-ok')
 
 const nightThemeBtn = document.querySelector('.night-theme-btn')
 
@@ -34,10 +35,13 @@ let btnSortingDown = document.querySelector('.sorting-btn-down')
 
 tasks = []
 
+isEditing = false
+
+
 // начальная проверка локального хранилища перед началом работы на сайте
 if(localStorage.getItem('tasks')){
     tasks = JSON.parse(localStorage.getItem('tasks'))
-    console.log(tasks)
+    // console.log(tasks)
     tasks.forEach(function(task){
         renderTask(task)
     })
@@ -50,11 +54,138 @@ taskCounter()
 
 // цикл отслеживает клик по любой из 2-х кнопок и запускает функцию открытия модального окна
 createTaskBtn.forEach(item => {
+    // isEditing = false
     item.addEventListener('click', openModal)
 })
 // функция открытия модального окна
-function openModal() {
+function openModal(event) {
     modal.classList.add('open')
+    if(isEditing){
+        let task = tasks.find(el => el.id === +event.target.closest('.list-group-item').id);
+
+        let inputForm = document.querySelector('.form-input')
+        let textareaForm = document.querySelector('.form-textarea')
+        let colorForm = document.querySelector('.form-input-color')
+        let radio = document.querySelectorAll('.form__radio')
+        let radioBlock = document.querySelector('.modal__form-radio')
+
+        let priority
+
+        radio.forEach(item => {
+        if(item.checked){
+        priority = item.value
+        }
+        })
+
+        colorForm.value = task.color
+        inputForm.value = task.title
+        textareaForm.value = task.description
+        radio.value = task.priority
+
+        btnAddTask.addEventListener('click', (event) => {
+            event.preventDefault()
+
+            task.title = inputForm.value
+            task.description = textareaForm.value
+            task.color = colorForm.value
+
+            task.priority = radio.value
+
+            if(inputForm.value.length === 0){
+                inputForm.classList.add('error')
+                return false
+            }else{
+                inputForm.classList.remove('error')
+            }
+
+            if(textareaForm.value.length === 0){
+                textareaForm.classList.add('error')
+                return false
+            }else{
+                textareaForm.classList.remove('error')
+            }
+
+            tasksList.innerHTML = '';
+
+            tasks.forEach(function(task){
+                renderTask(task)
+                saveToLS()
+            })
+            modal.classList.remove('open')
+            return true
+        })
+    }else{
+        btnAddTask.addEventListener('click', (event) => {
+            event.preventDefault()
+            let inputForm = document.querySelector('.form-input')
+            let textareaForm = document.querySelector('.form-textarea')
+            let colorForm = document.querySelector('.form-input-color')
+            let radio = document.querySelectorAll('.form__radio')
+            let radioBlock = document.querySelector('.modal__form-radio')
+            let date = new Date().toLocaleString()
+
+            let priority
+
+            radio.forEach(item => {
+            if(item.checked){
+            priority = item.value
+            }
+            })
+
+            newTask = {
+                title: inputForm.value,
+                description: textareaForm.value,
+                color: colorForm.value,
+                priority,
+                date,
+                done: false,
+                id: Date.now(),
+                isEditing: false
+            }
+
+                // валидация
+            if(inputForm.value.length === 0){
+                inputForm.classList.add('error')
+                return false
+            }else{
+                inputForm.classList.remove('error')
+            }
+
+            if(textareaForm.value.length === 0){
+                textareaForm.classList.add('error')
+                return false
+            }else{
+                textareaForm.classList.remove('error')
+            }
+
+            if(radio.length > 0){
+                let checked = false;
+                radio.forEach(item => {
+                    if(item.checked){
+                        checked = true
+                    }
+                })
+                if(!checked){
+                    radioBlock.classList.add('error')
+                    return false
+                }else{
+                    radioBlock.classList.remove('error')
+                }
+            }
+
+            tasks.push(newTask)
+
+            reset()
+            saveToLS()
+            renderTask(newTask)
+            checkEmptyList()
+            checkLists()
+            taskCounter()
+            changeColor(newTask)
+            return true
+                    
+        })
+    }
 }
 
 // при клике запускается функция закрытия модального окна
@@ -109,86 +240,94 @@ nightThemeBtn.addEventListener('click', function(){
 
 
 // отправка заполненной формы нас сервер
-form.addEventListener('submit', addTask);
 
-function addTask(event) {
-    event.preventDefault()
+
+
+
+// btnAddTask.addEventListener('click', addTask)
+
+// form.addEventListener('submit', addTask);
+
+// function addTask(event) {
+//     event.preventDefault()
     
 
-    // переменные формы
-    let inputForm = document.querySelector('.form-input')
-    let textareaForm = document.querySelector('.form-textarea')
-    let colorForm = document.querySelector('.form-input-color')
-    let radio = document.querySelectorAll('.form__radio')
-    let radioBlock = document.querySelector('.modal__form-radio')
-    let date = new Date().toLocaleString()
+//     // переменные формы
+//     let inputForm = document.querySelector('.form-input')
+//     let textareaForm = document.querySelector('.form-textarea')
+//     let colorForm = document.querySelector('.form-input-color')
+//     let radio = document.querySelectorAll('.form__radio')
+//     let radioBlock = document.querySelector('.modal__form-radio')
+//     let date = new Date().toLocaleString()
 
-   
+    
 
-    let priority
+//     let priority
 
-    radio.forEach(item => {
-        if(item.checked){
-            priority = item.value
-        }
-    })
+//     radio.forEach(item => {
+//         if(item.checked){
+//             priority = item.value
+//         }
+//     })
 
-    newTask = {
-        title: inputForm.value,
-        description: textareaForm.value,
-        color: colorForm.value,
-        priority,
-        date,
-        done: false,
-        id: Date.now()
-    }
+//     newTask = {
+//         title: inputForm.value,
+//         description: textareaForm.value,
+//         color: colorForm.value,
+//         priority,
+//         date,
+//         done: false,
+//         id: Date.now(),
+//         isEditing: false
+//     }
     
     
 
-    // валидация
-    if(inputForm.value.length === 0){
-        inputForm.classList.add('error')
-        return false
-    }else{
-        inputForm.classList.remove('error')
-    }
+//     // валидация
+//     if(inputForm.value.length === 0){
+//         inputForm.classList.add('error')
+//         return false
+//     }else{
+//         inputForm.classList.remove('error')
+//     }
 
-    if(textareaForm.value.length === 0){
-        textareaForm.classList.add('error')
-        return false
-    }else{
-        textareaForm.classList.remove('error')
-    }
+//     if(textareaForm.value.length === 0){
+//         textareaForm.classList.add('error')
+//         return false
+//     }else{
+//         textareaForm.classList.remove('error')
+//     }
 
-    if(radio.length > 0){
-        let checked = false;
-        radio.forEach(item => {
-            if(item.checked){
-                checked = true
-            }
-        })
-        if(!checked){
-            radioBlock.classList.add('error')
-            return false
-        }else{
-            radioBlock.classList.remove('error')
-        }
-    }
+//     if(radio.length > 0){
+//         let checked = false;
+//         radio.forEach(item => {
+//             if(item.checked){
+//                 checked = true
+//             }
+//         })
+//         if(!checked){
+//             radioBlock.classList.add('error')
+//             return false
+//         }else{
+//             radioBlock.classList.remove('error')
+//         }
+//     }
 
-    tasks.push(newTask)
+//     tasks.push(newTask)
     
 
     
     
-    reset()
-    saveToLS()
-    renderTask(newTask)
-    checkEmptyList()
-    checkLists()
-    taskCounter()
-    changeColor(newTask)
-    return true
-}
+//     reset()
+//     saveToLS()
+//     renderTask(newTask)
+//     checkEmptyList()
+//     checkLists()
+//     taskCounter()
+//     changeColor(newTask)
+//     return true
+// }
+
 
 function changeColor(task){
     document.querySelector('.list-group-item__bage').style.background = task.color
@@ -251,7 +390,7 @@ function renderTask(task) {
                     </div>
                     <div class="note-btn">
                         <span>${task.date}</span>
-                        <button class="btn-done" type="button" data-action ='done'>&check;</button>
+                        <button class="btn-done" type="submit" data-action ='done'>&check;</button>
                         <button class="btn-delete" type="button" data-action ='delete'>&times;</button>
                         <button class="btn-edit" type="button" data-action ='edit'>&#9998;</button>
                     </div>
@@ -278,8 +417,6 @@ function renderTask(task) {
         tasksList.insertAdjacentHTML('afterbegin', taskHTML)
     }
 
-    changeColor(task)
-
     let btnDone = document.querySelector('.btn-done')
     if(btnDone){
         btnDone.addEventListener('click', doneTask)
@@ -300,11 +437,14 @@ function renderTask(task) {
         btnReturn.addEventListener('click', returnTask)
     }
 
-    
+    changeColor(task)
 }
 
 function returnTask(event) {
     if(event.target.dataset.action === 'returnTask'){
+
+        tasksListDone.innerHTML = ''
+        tasksList.innerHTML = ''
         const parentNode = event.target.closest('.list-group-item')
 
         const id = Number(parentNode.id);
@@ -317,18 +457,28 @@ function returnTask(event) {
         // task.done = обратное значение от task.done (done: true)
         task.done = !task.done
 
-    }
-    location.reload();
+        tasks.forEach(function(task){
+            renderTask(task)
+        })
 
+    }
+    taskCounter()
     checkLists()
     saveToLS()
 }
 
 function doneTask(event) {
     if(event.target.dataset.action === 'done'){
+
+        tasksListDone.innerHTML = ''
+        tasksList.innerHTML = ''
+
         const parentNode = event.target.closest('.list-group-item')
 
+        // console.log(parentNode)
+
         const id = Number(parentNode.id);
+        console.log(parentNode.id)
 
         const task = tasks.find(function(task){
             if(task.id === id){
@@ -340,6 +490,9 @@ function doneTask(event) {
 
         blockTaskDone.classList.add('open')
 
+        tasks.forEach(function(task){
+            renderTask(task)
+        })
         
         const taskTitle = parentNode.querySelector('.note-title')
         const taskDescription = parentNode.querySelector('.note-description')
@@ -349,11 +502,11 @@ function doneTask(event) {
         taskDescription.classList.toggle('note-description--done')
         taskPriority.classList.toggle('note-priority--done')
 
-        location.reload();
+        // location.reload();
     }
-  
+    taskCounter()
     saveToLS()
-    checkLists() 
+    checkLists()
 }
     
 
@@ -380,38 +533,91 @@ function deleteTask(e){
     parentNode.remove()
     checkLists()
 }
-function openEditWindow(event) {
-    editingBlock.classList.add('open')
-    let task = tasks.find(el => el.id === +event.target.closest('.list-group-item').id);
+// function openEditWindow(event) {
+//     editingBlock.classList.add('open')
 
-    let inputEdit = document.querySelector('.input-edit')
-    let textareaEdit = document.querySelector('.textarea-edit')
+//     // modal.classList.add('open')
+//     let task = tasks.find(el => el.id === +event.target.closest('.list-group-item').id);
 
-    inputEdit.value = task.title
-    textareaEdit.value = task.description
+//     let inputEdit = document.querySelector('.input-edit')
+//             let textareaEdit = document.querySelector('.textarea-edit')
+//             let colorEdit = document.querySelector('.edit-input-color')
+//             let radioEdit = document.querySelectorAll('.edit-radio')
+//             let editRadioBlock = document.querySelector('.edit__form-radio')
+//             // let editRadio = document.querySelectorAll('.edit-form__radio')
 
-    okEditBtn.addEventListener('click', (event) => {
-        event.preventDefault()
-        task.title = inputEdit.value
-        task.description = textareaEdit.value
+//             let priority
+            
+//             radioEdit.forEach(item => {
+//                     if(item.checked){
+//                         priority = item.value
+//                     }
+//                 })
 
-        tasksList.innerHTML = '';
-        tasks.forEach(function(task){
-            renderTask(task)
-        })
-        editingBlock.classList.remove('open')
-    })
+//                 colorEdit.value = task.color
+//                 inputEdit.value = task.title
+//                 textareaEdit.value = task.description
+//                 radioEdit = task.priority
 
-    cancelEditBtn.addEventListener('click', function(){
-        editingBlock.classList.remove('open')
-    })
+//             okEditBtn.addEventListener('click', (event) => {
+//             event.preventDefault()
+            
+//             if(inputEdit.value.length === 0){
+//                 inputEdit.classList.add('error')
+//                 return
+//             }
+//             else{
+//                 inputEdit.classList.remove('error')
+//             }
 
-   saveToLS()
-}
+//             if(textareaEdit.value.length === 0){
+//                 textareaEdit.classList.add('error')
+//                 return
+//             }else{
+//                 textareaEdit.classList.remove('error')
+//             }
+
+//             if(radioEdit.length > 0){
+//                 let checked = false;
+//                 radioEdit.forEach(item => {
+//                     if(item.checked){
+//                         checked = true
+//                     }
+//                 })
+//                 if(!checked){
+//                     editRadioBlock.classList.add('error')
+//                     return false
+//                 }else{
+//                     editRadioBlock.classList.remove('error')
+//                 }
+//             }
+            
+//             task.title = inputEdit.value
+//             task.description = textareaEdit.value
+//             task.color = colorEdit.value
+//             task.priority = priority
+    
+//             tasksList.innerHTML = '';
+    
+//             tasks.forEach(function(task){
+//                 renderTask(task)
+//                 saveToLS()
+//             })
+//             editingBlock.classList.remove('open')
+//         })
+
+//         cancelEditBtn.addEventListener('click', () => {
+//             editingBlock.classList.remove('open')
+//         } )
+// //    saveToLS()
+// }
 
 function editTask(event){
     if(event.target.dataset.action === 'edit'){ 
-        openEditWindow(event)
+        isEditing = true
+        // openEditWindow(event)
+        // console.log(isEditing)
+        openModal(event)
     }
 }
 
@@ -426,15 +632,12 @@ function sortDown() {
         renderTask(task)
     })
 
-    console.log(tasks)
+    saveToLS()
+    // console.log(tasks)
 }
  function sortFn(a,b){
     return b.id - a.id
  }
-
-
-      
-
 
 btnSortingUp.addEventListener('click', sortUp)
 function sortUp(){
@@ -446,8 +649,8 @@ function sortUp(){
     tasks.forEach(function(task){
         renderTask(task)
     })
-
-    console.log(tasks)
+     saveToLS()
+    // console.log(tasks)
 }
 
 
@@ -479,7 +682,14 @@ function delteValidation(){
     radioBlock.classList.remove('error')
 }
 
-
+function deleteEditValidation(){
+    let inputEdit = document.querySelector('.form-input')
+    let textareaEdit = document.querySelector('.form-textarea')
+    // let radioBlock = document.querySelector('.modal__form-radio')
+    inputEdit.classList.remove('error')
+    textareaEdit.classList.remove('error')
+    // radioBlock.classList.remove('error')
+}
 
 
 // const createTaskBtn = document.querySelectorAll('.create-task');

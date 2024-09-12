@@ -76,7 +76,7 @@
                     </div>
                     <div class="note-btn">
                         <span>Дата создания задачи</span>
-                        <button class="btn-done" type="button" data-action ='done'>&check;</button>
+                        <button class="btn-done" type="submit" data-action ='done'>&check;</button>
                         <button class="btn-delete" type="button" data-action ='delete'>&times;</button>
                         <button class="btn-edit" type="button" data-action ='edit'>&#9998;</button>
                         <button class="btn-return" type="button" data-action ='returnTask'>&#8593;</button>
@@ -104,7 +104,7 @@
                 
 
                 <span class="form-color-title">Цвет задачи</span>
-                <input class="form-input-color" type="color" id="color" value="#8B008B">
+                <input class="form-input-color" type="color" id="color" value="#F08080">
 
                 <span class="form-radio-title">Приоретет задачи</span>
                 <div class="modal__form-radio">
@@ -136,11 +136,34 @@
                 <span>Редактировние вашей задачи</span>
             </div>
             <form id="editForm">
+
                 <span class="edit-input-title">Редактирование названия задчи</span>
                 <input type="text" class="input-edit" placeholder="Введите редактирование названия вашей задачи">
 
                 <span class="edit-textarea-title">Редактирование описания задчи</span>
                 <textarea class="textarea-edit" placeholder="Введите редактирование описания вашей задачи"></textarea>
+
+                <span class="edit-color-title">Цвет задачи</span>
+                <input class="edit-input-color" type="color" id="color"  value="#DC143C">
+
+                
+
+                <span class="edit-form-radio-title">Приоретет задачи</span>
+                <div class="edit__form-radio">
+                    <div class="edit__radio-block">
+                        <input id="editRadioHigh" class="edit-radio" type="radio" name="level" value="высокий">
+                        <label  class="edit-label" for="editRadioHigh">высоский </label>
+                    </div>
+                    <div class="edit__radio-block">
+                        <input id="editRadioMiddle" class="edit-radio" type="radio" name="level" value="средний">
+                        <label class="edit-label" for="editRadioMiddle">средний</label>
+                    </div>
+                    <div class="edit__radio-block">
+                        <input id="editRadioBottom" class="edit-radio" type="radio" name="level" value="низкий">
+                        <label class="edit-label" for="editRadioBottom">низкий</label>
+                    </div>
+                </div>
+               
 
                 <div class="edit-form-btn">
                     <button class="edit-form__ok-btn" type="submit">Ok</button>
