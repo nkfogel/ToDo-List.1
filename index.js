@@ -33,9 +33,9 @@ let btnSortingUp = document.querySelector('.sorting-btn-up')
 let btnSortingDown = document.querySelector('.sorting-btn-down')
 
 
-tasks = []
+let tasks = []
 
-isEditing = false
+let isEditing = false
 
 
 // начальная проверка локального хранилища перед началом работы на сайте
@@ -54,82 +54,64 @@ taskCounter()
 
 // цикл отслеживает клик по любой из 2-х кнопок и запускает функцию открытия модального окна
 createTaskBtn.forEach(item => {
-    // isEditing = false
     item.addEventListener('click', openModal)
 })
 // функция открытия модального окна
 function openModal(event) {
     modal.classList.add('open')
+
+    let inputForm = document.querySelector('.form-input')
+    let textareaForm = document.querySelector('.form-textarea')
+    let colorForm = document.querySelector('.form-input-color')
+    let radio = document.querySelectorAll('.form__radio')
+    let radioBlock = document.querySelector('.modal__form-radio')
+    let date = new Date().toLocaleString()
+
     if(isEditing){
         let task = tasks.find(el => el.id === +event.target.closest('.list-group-item').id);
 
-        let inputForm = document.querySelector('.form-input')
-        let textareaForm = document.querySelector('.form-textarea')
-        let colorForm = document.querySelector('.form-input-color')
-        let radio = document.querySelectorAll('.form__radio')
-        let radioBlock = document.querySelector('.modal__form-radio')
-
-        let priority
-
-        radio.forEach(item => {
-        if(item.checked){
-        priority = item.value
-        }
-        })
-
-        colorForm.value = task.color
-        inputForm.value = task.title
-        textareaForm.value = task.description
-        radio.value = task.priority
-
-        btnAddTask.addEventListener('click', (event) => {
-            event.preventDefault()
-
-            task.title = inputForm.value
-            task.description = textareaForm.value
-            task.color = colorForm.value
-
-            task.priority = radio.value
-
-            if(inputForm.value.length === 0){
-                inputForm.classList.add('error')
-                return false
-            }else{
-                inputForm.classList.remove('error')
-            }
-
-            if(textareaForm.value.length === 0){
-                textareaForm.classList.add('error')
-                return false
-            }else{
-                textareaForm.classList.remove('error')
-            }
-
-            tasksList.innerHTML = '';
-
-            tasks.forEach(function(task){
-                renderTask(task)
-                saveToLS()
+            radio.forEach(item => {
+                if(item.value === task.priority){
+                item.checked = true
+                }
             })
-            modal.classList.remove('open')
-            return true
-        })
+
+                colorForm.value = task.color
+                inputForm.value = task.title
+                textareaForm.value = task.description
+                radio.value = task.priority 
+
+                // btnAddTask.addEventListener('click', (event) => {
+                //     event.preventDefault()
+                    
+                //     task.title = inputForm.value
+                //     task.description = textareaForm.value
+                //     task.color = colorForm.value
+
+                //     radio.forEach(item => {
+                //         if(item.checked){
+                //         task.priority = item.value
+                //         }
+                //     })
+
+                //     tasksList.innerHTML = '';
+
+                //     tasks.forEach(function(task){
+                //         renderTask(task)
+                //         saveToLS()
+                //     })
+                //     modal.classList.remove('open')
+                // })
     }else{
         btnAddTask.addEventListener('click', (event) => {
             event.preventDefault()
-            let inputForm = document.querySelector('.form-input')
-            let textareaForm = document.querySelector('.form-textarea')
-            let colorForm = document.querySelector('.form-input-color')
-            let radio = document.querySelectorAll('.form__radio')
-            let radioBlock = document.querySelector('.modal__form-radio')
-            let date = new Date().toLocaleString()
 
             let priority
 
             radio.forEach(item => {
-            if(item.checked){
-            priority = item.value
-            }
+                if(item.checked){
+                priority = item.value
+                }
             })
 
             newTask = {
@@ -140,10 +122,9 @@ function openModal(event) {
                 date,
                 done: false,
                 id: Date.now(),
-                isEditing: false
             }
 
-                // валидация
+            // валидация
             if(inputForm.value.length === 0){
                 inputForm.classList.add('error')
                 return false
@@ -183,9 +164,116 @@ function openModal(event) {
             taskCounter()
             changeColor(newTask)
             return true
-                    
         })
     }
+
+    // let inputForm = document.querySelector('.form-input')
+    // let textareaForm = document.querySelector('.form-textarea')
+    // let colorForm = document.querySelector('.form-input-color')
+    // let radio = document.querySelectorAll('.form__radio')
+    // let radioBlock = document.querySelector('.modal__form-radio')
+    // let date = new Date().toLocaleString()
+
+    // if(isEditing){
+    //     let task = tasks.find(el => el.id === +event.target.closest('.list-group-item').id);
+
+    //     radio.forEach(item => {
+    //     if(item.value === task.priority){
+    //     item.checked = true
+    //     }
+    //     })
+
+    //     colorForm.value = task.color
+    //     inputForm.value = task.title
+    //     textareaForm.value = task.description
+    //     radio.value = task.priority
+
+    //     btnAddTask.addEventListener('click', (event) => {
+    //         event.preventDefault()
+
+    //         task.title = inputForm.value
+    //         task.description = textareaForm.value
+    //         task.color = colorForm.value
+
+    //         radio.forEach(item => {
+    //             if(item.checked){
+    //                 task.priority = item.value
+    //             }
+    //         })
+
+    //         tasksList.innerHTML = '';
+
+    //         tasks.forEach(function(task){
+    //             renderTask(task)
+    //             saveToLS()
+    //         })
+    //         modal.classList.remove('open')
+    //     })
+    // }else{
+    //     btnAddTask.addEventListener('click', (event) => {
+    //         event.preventDefault()
+            
+
+    //         let priority
+
+    //         radio.forEach(item => {
+    //         if(item.checked){
+    //            priority = item.value
+    //         }
+    //         })
+
+    //         newTask = {
+    //             title: inputForm.value,
+    //             description: textareaForm.value,
+    //             color: colorForm.value,
+    //             priority,
+    //             date,
+    //             done: false,
+    //             id: Date.now(),
+    //         }
+
+    //             // валидация
+    //         if(inputForm.value.length === 0){
+    //             inputForm.classList.add('error')
+    //             return false
+    //         }else{
+    //             inputForm.classList.remove('error')
+    //         }
+
+    //         if(textareaForm.value.length === 0){
+    //             textareaForm.classList.add('error')
+    //             return false
+    //         }else{
+    //             textareaForm.classList.remove('error')
+    //         }
+
+    //         if(radio.length > 0){
+    //             let checked = false;
+    //             radio.forEach(item => {
+    //                 if(item.checked){
+    //                     checked = true
+    //                 }
+    //             })
+    //             if(!checked){
+    //                 radioBlock.classList.add('error')
+    //                 return false
+    //             }else{
+    //                 radioBlock.classList.remove('error')
+    //             }
+    //         }
+
+    //         tasks.push(newTask)
+
+    //         reset()
+    //         saveToLS()
+    //         renderTask(newTask)
+    //         checkEmptyList()
+    //         checkLists()
+    //         taskCounter()
+    //         changeColor(newTask)
+    //         return true     
+    //     })
+    // }
 }
 
 // при клике запускается функция закрытия модального окна
