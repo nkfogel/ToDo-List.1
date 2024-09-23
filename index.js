@@ -624,6 +624,7 @@ function deleteTask(e){
     alert('уверены?')
     parentNode.remove()
     checkLists()
+    taskCounter()
 }
 function openEditWindow(event) {
     editingBlock.classList.add('open')
